@@ -23,10 +23,10 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class BookingService implements com.hotel.booking.service.BookingService {
+public class BookingServiceImpl implements com.hotel.booking.service.BookingService {
 
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BookingService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookingServiceImpl.class);
 
     private final BookingRepository bookingRepository;
 
@@ -34,7 +34,7 @@ public class BookingService implements com.hotel.booking.service.BookingService 
 
 
     @Autowired
-    public BookingService(BookingRepository bookingRepository) {
+    public BookingServiceImpl(BookingRepository bookingRepository) {
         this.bookingRepository = bookingRepository;
     }
 
@@ -46,7 +46,7 @@ public class BookingService implements com.hotel.booking.service.BookingService 
             final Booking booking = bookingRepository.save(parseDTOToEntity(bookingDTORequest));
             return parseEntityToDTOResponse(booking);
         } else {
-            return new BookingDTOResponse();
+            return null;
         }
 
     }
@@ -70,7 +70,7 @@ public class BookingService implements com.hotel.booking.service.BookingService 
             return new ArrayList<>();
         } else {
             LOGGER.info("Bookings found {} ", listOfBooking);
-            return listOfBooking.stream().map(BookingService::parseEntityToDTOResponse)
+            return listOfBooking.stream().map(BookingServiceImpl::parseEntityToDTOResponse)
                     .collect(Collectors.toList());
         }
 

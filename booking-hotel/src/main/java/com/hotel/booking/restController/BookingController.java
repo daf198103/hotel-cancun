@@ -2,7 +2,7 @@ package com.hotel.booking.restController;
 
 import com.hotel.booking.dto.BookingDTORequest;
 import com.hotel.booking.dto.BookingDTOResponse;
-import com.hotel.booking.service.impl.BookingService;
+import com.hotel.booking.service.impl.BookingServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -33,10 +33,10 @@ public class BookingController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingController.class);
 
 
-    private final BookingService bookingService;
+    private final BookingServiceImpl bookingService;
 
     @Autowired
-    public BookingController(BookingService bookingService) {
+    public BookingController(BookingServiceImpl bookingService) {
         this.bookingService = bookingService;
     }
 
@@ -44,7 +44,7 @@ public class BookingController {
     @ApiOperation(value = "Booking a new reservation")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Reservation successfully done"),
-            @ApiResponse(code = 400, message = "Something went wrong, review data and do it again")
+            @ApiResponse(code = 404, message = "Something went wrong, review data and do it again")
     })
     @ResponseStatus(code = HttpStatus.CREATED)
     @PostMapping(value = "/create")
@@ -62,7 +62,7 @@ public class BookingController {
 
 
     @ApiOperation(value = "Find all booking list")
-    @GetMapping(value = "/findall")
+    @GetMapping(value = "/findAll")
     public ResponseEntity<List<BookingDTOResponse>> findAll() {
         LOGGER.info("Finding All bookings ");
         final List<BookingDTOResponse> responseDTOlist;
@@ -96,7 +96,7 @@ public class BookingController {
                                            final Long id) {
         LOGGER.info("Deleting booking by id: {}.", id);
         bookingService.deleteById(id);
-        return new ResponseEntity(id,HttpStatus.NO_CONTENT);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @ApiOperation(value = "Delete logically a booking by its id")
@@ -106,7 +106,7 @@ public class BookingController {
                                            final Long id) {
         LOGGER.info("Deleting booking by id: {}.", id);
         bookingService.deleteLogicallyById(id);
-        return new ResponseEntity(id,HttpStatus.NO_CONTENT);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @ApiOperation(value = "Update a booking by its id")
@@ -123,7 +123,7 @@ public class BookingController {
                                        final Long id) {
         LOGGER.info("Updating booking with id {} and body request {}.", id, bookingDTORequest);
         bookingService.update(id,bookingDTORequest);
-        return new ResponseEntity(bookingDTORequest,HttpStatus.NO_CONTENT);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
 }
