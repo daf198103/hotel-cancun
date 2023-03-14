@@ -119,7 +119,7 @@ public class BookingServiceImpl implements com.hotel.booking.service.BookingServ
      *
      * @param bookingDTORequest The request to be validated.
      */
-    private boolean validateBookingRequest(final BookingDTORequest bookingDTORequest) {
+    public boolean validateBookingRequest(final BookingDTORequest bookingDTORequest) {
         if (LocalDate.parse(bookingDTORequest.getStartDate(),dtf).isAfter(LocalDate.parse(bookingDTORequest.getFinishDate(),dtf))) {
             LOGGER.info("The start date parameter should be before the finish date parameter.");
             return false;
@@ -155,7 +155,7 @@ public class BookingServiceImpl implements com.hotel.booking.service.BookingServ
          * @param bookingDTORequest The request to be validated.
          * @return <b>true</b> if the days are available, <b>false</b> otherwise.
          */
-        private boolean availabilityDays(final BookingDTORequest bookingDTORequest) {
+        public boolean availabilityDays(final BookingDTORequest bookingDTORequest) {
 
             final List<BookingDTOResponse> bookingDTOresponses = findAll();
             final LocalDate requestStartDate = LocalDate.parse(bookingDTORequest.getStartDate(), dtf);
