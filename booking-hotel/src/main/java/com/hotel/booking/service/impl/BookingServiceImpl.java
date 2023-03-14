@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class BookingServiceImpl implements com.hotel.booking.service.BookingService {
 
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BookingServiceImpl.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(BookingServiceImpl.class);
 
     private final BookingRepository bookingRepository;
 
@@ -87,26 +87,12 @@ public class BookingServiceImpl implements com.hotel.booking.service.BookingServ
         }
     }
 
-    /**
-     * Logical deletion
-     * @param id sets expired to true
-     * just to keep tracking of DB
-     * */
     @Override
-    public void deleteLogicallyById(Long id) {
+    public void update(Long id, BookingDTORequest bookingDTORequest) throws Exception {
         final Optional<Booking> booking = bookingRepository.findById(id);
         if (!booking.isPresent()) {
             LOGGER.error("Booking with id - {} WAS NOT FOUND!",id);
-        } else {
-            bookingRepository.deleteLogicallyById(id);
-        }
-    }
-
-    @Override
-    public void update(Long id, BookingDTORequest bookingDTORequest) {
-        final Optional<Booking> booking = bookingRepository.findById(id);
-        if (!booking.isPresent()) {
-            LOGGER.error("Booking with idCard - {} WAS NOT FOUND!",id);
+            throw new Exception("Booking WAS NOT FOUND!");
         } else {
             LOGGER.info("Booking {} update validated.", bookingDTORequest);
             bookingRepository.save(parseDTOUpdatingDate(booking.get(), bookingDTORequest));
@@ -172,7 +158,7 @@ public class BookingServiceImpl implements com.hotel.booking.service.BookingServ
                     if (requestStartDate.isEqual(responseStartDate) ||
                             requestStartDate.isEqual(responseFinishDate) ||
                             requestFinishDate.isEqual(responseStartDate) ||
-                            requestFinishDate.isEqual(responseFinishDate)) {
+                            requestFinishDate.isEqual(responseFinishDate) ) {
                         return false;
                     }
 
@@ -204,7 +190,6 @@ public class BookingServiceImpl implements com.hotel.booking.service.BookingServ
         booking.setFinishDate(LocalDate.parse(bookingDTORequest.getFinishDate(),dtf));
         booking.setCreatedDate(LocalDate.now(ZoneOffset.UTC));
         booking.setUpdatedDate(LocalDate.now(ZoneOffset.UTC));
-        booking.setExpired(false);
         return booking;
     }
 
@@ -225,8 +210,7 @@ public class BookingServiceImpl implements com.hotel.booking.service.BookingServ
                     booking.getIdCard(),
                     booking.getName(),
                     booking.getStartDate().format(dateFormat),
-                    booking.getFinishDate().format(dateFormat),
-                    booking.isExpired());
+                    booking.getFinishDate().format(dateFormat));
 
     }
 

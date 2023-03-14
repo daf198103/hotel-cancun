@@ -58,8 +58,7 @@ public class BookingControllerTest {
                 "12345",
                 "John Connor",
                 "2023-03-20",
-                "2023-03-22",
-                false
+                "2023-03-22"
         ));
 
         this.mockMvc
@@ -76,8 +75,25 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$.idCard").value("12345"))
                 .andExpect(jsonPath("$.name").value("John Connor"))
                 .andExpect(jsonPath("$.startDate").value("2023-03-20"))
-                .andExpect(jsonPath("$.finishDate").value("2023-03-22"))
-                .andExpect(jsonPath("$.expired").value(false));
+                .andExpect(jsonPath("$.finishDate").value("2023-03-22"));
+    }
+
+
+    @Test
+    public void testCreateBookingInvalidData() throws Exception {
+        when(bookingServiceimpl.save(any())).thenReturn(
+                null);
+
+        this.mockMvc
+                .perform(post("/api/v1/booking/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                "{\"idCard\": \"" + null + "\"," +
+                                        " \"name\": \"" + "" + "\"," +
+                                        " \"startDate\": \"" + "" + "\"," +
+                                        " \"finishDate\": \"" + "" +
+                                        " \"}"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -88,8 +104,7 @@ public class BookingControllerTest {
                         "12345",
                         "John Connor",
                         "2023-03-08",
-                        "2023-03-10",
-                        false
+                        "2023-03-10"
                 ));
 
         this.mockMvc
@@ -99,8 +114,7 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$.idCard").value("12345"))
                 .andExpect(jsonPath("$.name").value("John Connor"))
                 .andExpect(jsonPath("$.startDate").value("2023-03-08"))
-                .andExpect(jsonPath("$.finishDate").value("2023-03-10"))
-                .andExpect(jsonPath("$.expired").value(false));
+                .andExpect(jsonPath("$.finishDate").value("2023-03-10"));
     }
 
     @Test
@@ -114,8 +128,7 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$.idCard").isEmpty())
                 .andExpect(jsonPath("$.name").isEmpty())
                 .andExpect(jsonPath("$.startDate").isEmpty())
-                .andExpect(jsonPath("$.finishDate").isEmpty())
-                .andExpect(jsonPath("$.expired").value(false));
+                .andExpect(jsonPath("$.finishDate").isEmpty());
     }
 
     @Test
@@ -127,8 +140,7 @@ public class BookingControllerTest {
                         "12345",
                         "John Connor",
                         "2023-03-08",
-                        "2023-03-10",
-                        false
+                        "2023-03-10"
                 )));
 
         this.mockMvc
@@ -138,39 +150,10 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$[0].idCard").value("12345"))
                 .andExpect(jsonPath("$[0].name").value("John Connor"))
                 .andExpect(jsonPath("$[0].startDate").value("2023-03-08"))
-                .andExpect(jsonPath("$[0].finishDate").value("2023-03-10"))
-                .andExpect(jsonPath("$[0].expired").value(false));
+                .andExpect(jsonPath("$[0].finishDate").value("2023-03-10"));
     }
 
-    @Test
-    public void testCreateBookingInvalidData() throws Exception {
-        when(bookingServiceimpl.save(any())).thenReturn(
-                new BookingDTOResponse(
-                        null,
-                        "",
-                        "",
-                        "",
-                        "",
-                        false
-                ));
 
-        this.mockMvc
-                .perform(post("/api/v1/booking/create")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(
-                                "{\"idCard\": \"" + "12345" + "\"," +
-                                        " \"name\": \"" + "John Connor" + "\"," +
-                                        " \"startDate\": \"" + "2023-03-20" + "\"," +
-                                        " \"finishDate\": \"" + "2023-03-19" +
-                                        " \"}"))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.id").isEmpty())
-                .andExpect(jsonPath("$.idCard").isEmpty())
-                .andExpect(jsonPath("$.name").isEmpty())
-                .andExpect(jsonPath("$.startDate").isEmpty())
-                .andExpect(jsonPath("$.finishDate").isEmpty())
-                .andExpect(jsonPath("$.expired").value(false));
-    }
 
     @Test
     public void testDeleteBookingById() throws Exception {
@@ -178,15 +161,6 @@ public class BookingControllerTest {
         doNothing().when(bookingServiceimpl).deleteById(1L);
         this.mockMvc
                 .perform(delete("/api/v1/booking/delete/1"))
-                .andExpect(status().isNoContent());
-    }
-
-    @Test
-    public void testDeleteBookingLogicallyById() throws Exception {
-
-        doNothing().when(bookingServiceimpl).deleteById(1L);
-        this.mockMvc
-                .perform(delete("/api/v1/booking/delete/logically/1"))
                 .andExpect(status().isNoContent());
     }
 

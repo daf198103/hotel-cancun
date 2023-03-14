@@ -93,19 +93,9 @@ public class BookingController {
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") @ApiParam(value = "The booking id")
-                                           final Long id) {
+                                           final Long id) throws Exception {
         LOGGER.info("Deleting booking by id: {}.", id);
         bookingService.deleteById(id);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
-    }
-
-    @ApiOperation(value = "Delete logically a booking by its id")
-    @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    @DeleteMapping(value = "/delete/logically/{id}")
-    public ResponseEntity<Void> deleteLogicallyById(@PathVariable("id") @ApiParam(value = "The booking id")
-                                           final Long id) {
-        LOGGER.info("Deleting booking by id: {}.", id);
-        bookingService.deleteLogicallyById(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
@@ -120,7 +110,7 @@ public class BookingController {
     public ResponseEntity<Void> update(@RequestBody @ApiParam(value = "The booking data")
                                        @Valid final BookingDTORequest bookingDTORequest,
                                        @PathVariable("id") @ApiParam(value = "The booking id")
-                                       final Long id) {
+                                       final Long id) throws Exception {
         LOGGER.info("Updating booking with id {} and body request {}.", id, bookingDTORequest);
         bookingService.update(id,bookingDTORequest);
         return new ResponseEntity(HttpStatus.NO_CONTENT);

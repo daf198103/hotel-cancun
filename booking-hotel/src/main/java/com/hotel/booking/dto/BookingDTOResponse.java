@@ -27,13 +27,12 @@ public class BookingDTOResponse {
     @ApiModelProperty(example = "true")
     private boolean expired;
 
-    public BookingDTOResponse(Long id, String idCard, String name, String startDate, String finishDate, boolean expired) {
+    public BookingDTOResponse(Long id, String idCard, String name, String startDate, String finishDate) {
         this.id = id;
         this.idCard = idCard;
         this.name = name;
         this.startDate = startDate;
         this.finishDate = finishDate;
-        this.expired = expired;
     }
     public BookingDTOResponse() {}
 }

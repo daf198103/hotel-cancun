@@ -39,17 +39,10 @@ public interface BookingService {
 
 
     /**
-     * Logical Deletion by Id
-     * @param id The Booking Id
-     * */
-
-    void deleteLogicallyById(final Long id);
-
-    /**
      * Updates a booking.
      *
      * @param id The booking id.
      * @param bookingDTORequest The request to update.
      */
-    void update(final Long id, final BookingDTORequest bookingDTORequest);
+    void update(final Long id, final BookingDTORequest bookingDTORequest) throws Exception;
 }

@@ -42,12 +42,9 @@ public class Booking {
     @Column(name = "bok_updatedDate")
     private LocalDate updatedDate;
 
-    @Column(name = "bok_expired")
-    private boolean expired;
-
     public Booking () {}
 
-    public Booking(Long id, String idCard, String name, LocalDate startDate, LocalDate finishDate, LocalDate createdDate, LocalDate updatedDate, boolean expired) {
+    public Booking(Long id, String idCard, String name, LocalDate startDate, LocalDate finishDate, LocalDate createdDate, LocalDate updatedDate) {
         this.id = id;
         this.idCard = idCard;
         this.name = name;
@@ -55,7 +52,6 @@ public class Booking {
         this.finishDate = finishDate;
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
-        this.expired = expired;
     }
 
 

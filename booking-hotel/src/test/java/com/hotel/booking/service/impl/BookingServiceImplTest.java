@@ -9,13 +9,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
@@ -23,6 +28,7 @@ import static org.mockito.Mockito.when;
 public class BookingServiceImplTest {
 
 
+    @Spy
     @InjectMocks
     private BookingServiceImpl bookingService;
 
@@ -34,8 +40,7 @@ public class BookingServiceImplTest {
 
         final Booking validBooking = new Booking(1L,"12345","John Connor",
                 LocalDate.parse("2023-03-20"),LocalDate.parse("2023-03-22"),
-                 LocalDate.parse("2023-03-13"), LocalDate.parse("2023-03-13"),
-                false);
+                 LocalDate.parse("2023-03-13"), LocalDate.parse("2023-03-13"));
         final BookingDTOResponse validResponse = bookingService.parseEntityToDTOResponse(validBooking);
 
         when(repository.findById(1L)).thenReturn(Optional.of(validBooking));
@@ -48,8 +53,7 @@ public class BookingServiceImplTest {
 
         final Booking validBooking = new Booking(null,"","",
                 LocalDate.now(),LocalDate.now(),
-                LocalDate.now(), LocalDate.now(),
-                false);
+                LocalDate.now(), LocalDate.now());
 
         final BookingDTOResponse validResponse = bookingService.parseEntityToDTOResponse(validBooking);
 
@@ -62,8 +66,7 @@ public class BookingServiceImplTest {
     public void testFindAllBooking() {
         final Booking validBooking = new Booking(1L,"12345","John Connor",
                 LocalDate.parse("2023-03-20"),LocalDate.parse("2023-03-22"),
-                LocalDate.parse("2023-03-13"), LocalDate.parse("2023-03-13"),
-                false);
+                LocalDate.parse("2023-03-13"), LocalDate.parse("2023-03-13"));
 
         final BookingDTOResponse validResponse = bookingService.parseEntityToDTOResponse(validBooking);
         final List<Booking> expectedBookings = new ArrayList<>();
@@ -91,8 +94,7 @@ public class BookingServiceImplTest {
                 LocalDate.parse("2023-03-20"),
                 LocalDate.parse("2023-03-22"),
                 LocalDate.parse("2023-03-14"),
-                LocalDate.parse("2023-03-14"),
-                false);
+                LocalDate.parse("2023-03-14"));
 
         final BookingDTOResponse bookingDTOResponse = bookingService.parseEntityToDTOResponse(validBooking);
         when(repository.save(any(Booking.class))).thenReturn(validBooking);
@@ -194,8 +196,7 @@ public class BookingServiceImplTest {
                 LocalDate.parse("2023-03-20"),
                 LocalDate.parse("2023-03-22"),
                 LocalDate.parse("2023-03-14"),
-                LocalDate.parse("2023-03-14"),
-                false);
+                LocalDate.parse("2023-03-14"));
 
         final List<Booking> alreadyBooked = new ArrayList<>();
         alreadyBooked.add(validBooking);
@@ -220,8 +221,7 @@ public class BookingServiceImplTest {
                 LocalDate.parse("2023-03-20"),
                 LocalDate.parse("2023-03-22"),
                 LocalDate.parse("2023-03-14"),
-                LocalDate.parse("2023-03-14"),
-                false);
+                LocalDate.parse("2023-03-14"));
 
         final List<Booking> alreadyBooked = new ArrayList<>();
         alreadyBooked.add(validBooking);
@@ -246,8 +246,7 @@ public class BookingServiceImplTest {
                 LocalDate.parse("2023-03-21"),
                 LocalDate.parse("2023-03-23"),
                 LocalDate.parse("2023-03-14"),
-                LocalDate.parse("2023-03-14"),
-                false);
+                LocalDate.parse("2023-03-14"));
 
         final List<Booking> alreadyBooked = new ArrayList<>();
         alreadyBooked.add(validBooking);
@@ -272,8 +271,7 @@ public class BookingServiceImplTest {
                 LocalDate.parse("2023-03-23"),
                 LocalDate.parse("2023-03-20"),
                 LocalDate.parse("2023-03-14"),
-                LocalDate.parse("2023-03-14"),
-                false);
+                LocalDate.parse("2023-03-14"));
 
         final List<Booking> alreadyBooked = new ArrayList<>();
         alreadyBooked.add(validBooking);
@@ -281,6 +279,78 @@ public class BookingServiceImplTest {
         when(repository.findAll()).thenReturn(alreadyBooked);
         assertEquals(false,bookingService.availabilityDays(bookingDTORequest));
 
+    }
+
+    @Test
+    public void testUpdateInValidBooking(){
+        final BookingDTORequest bookingDTORequest = new BookingDTORequest(
+                "12345",
+                "John Connor",
+                "2023-03-24",
+                "2023-03-26");
+
+        final Exception exception = assertThrows(
+                Exception.class, () -> bookingService.update(0L, bookingDTORequest),
+                "Booking WAS NOT FOUND!"
+        );
+        assertTrue(exception.getMessage().contains("Booking WAS NOT FOUND!"));
+    }
+
+    @Test
+    public void testUpdateValidBooking() throws Exception {
+        final Booking validBooking = new Booking(
+                1L,
+                "12345",
+                "John Connor",
+                LocalDate.parse("2023-03-23"),
+                LocalDate.parse("2023-03-24"),
+                LocalDate.parse("2023-03-26"),
+                LocalDate.parse("2023-03-14"));
+
+        final BookingDTORequest bookingDTORequest = new BookingDTORequest(
+                "12345",
+                "John Connor",
+                "2023-03-24",
+                "2023-03-26");
+
+        when(repository.findById(1L)).thenReturn(Optional.of(validBooking));
+        bookingService.update(1L,bookingDTORequest);
+        final BookingDTOResponse bookingDTOResponse = bookingService.parseEntityToDTOResponse(validBooking);
+
+        assertEquals(validBooking.getStartDate(),LocalDate.parse(bookingDTOResponse.getStartDate()));
+    }
+
+    @Test
+    public void testDeleteValidBookingById() throws Exception {
+        final Booking validBooking = new Booking(
+                1L,
+                "12345",
+                "John Connor",
+                LocalDate.parse("2023-03-23"),
+                LocalDate.parse("2023-03-24"),
+                LocalDate.parse("2023-03-26"),
+                LocalDate.parse("2023-03-14"));
+
+        when(repository.findById(1L)).thenReturn(Optional.of(validBooking));
+        bookingService.deleteById(1L);
+        verify(repository,times(1)).delete(validBooking);
+    }
+
+
+    @Test
+    public void testDeleteInvalidBookingById() throws Exception {
+        final Booking validBooking = new Booking(
+                1L,
+                "12345",
+                "John Connor",
+                LocalDate.parse("2023-03-23"),
+                LocalDate.parse("2023-03-24"),
+                LocalDate.parse("2023-03-26"),
+                LocalDate.parse("2023-03-14"));
+
+        when(repository.findById(0L)).thenReturn(Optional.of(validBooking));
+        bookingService.deleteById(0L);
+        verify(repository,times(1)).delete(validBooking);
     }
 
 }
