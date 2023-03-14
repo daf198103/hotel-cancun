@@ -20,7 +20,6 @@ that can be booked , but not more than 30 days ahead and also the reservation ca
 - POST - /api/v1/booking/create - Booking a new reservation
 - UPDATE - /api/v1/booking/update/{id} - Update a booking by its id
 - DELETE - /api/v1/booking/delete/{id} - Delete a booking by its id
-- DELETE - /api/v1/booking/delete/logically/{id} - Delete logically a booking by its id (to keep tracking on DB)
 
 # Database 
 
