@@ -24,9 +24,6 @@ public class BookingDTOResponse {
     @ApiModelProperty(example = "2023-04-29T23:59:59.999Z")
     private String finishDate;
 
-    @ApiModelProperty(example = "true")
-    private boolean expired;
-
     public BookingDTOResponse(Long id, String idCard, String name, String startDate, String finishDate) {
         this.id = id;
         this.idCard = idCard;
