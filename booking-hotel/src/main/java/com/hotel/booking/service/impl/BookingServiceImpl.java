@@ -57,9 +57,10 @@ public class BookingServiceImpl implements com.hotel.booking.service.BookingServ
         if (!booking.isPresent()) {
            LOGGER.error("Booking with id - {} WAS NOT FOUND!",id);
            return new BookingDTOResponse();
+        } else {
+            LOGGER.info("Booking id {} is present", id);
+            return parseEntityToDTOResponse(Optional.of(booking).get().orElse(new Booking()));
         }
-        LOGGER.info("Booking id {} is present", id);
-        return parseEntityToDTOResponse(Optional.of(booking).get().orElse(new Booking()));
     }
 
     @Override
@@ -207,7 +208,7 @@ public class BookingServiceImpl implements com.hotel.booking.service.BookingServ
         return booking;
     }
 
-    public static Booking parseDTOUpdatingDate(final Booking booking,
+    public  Booking parseDTOUpdatingDate(final Booking booking,
                                                        final BookingDTORequest bookingDTORequest) {
             booking.setName(bookingDTORequest.getName());
             booking.setIdCard(booking.getIdCard());
