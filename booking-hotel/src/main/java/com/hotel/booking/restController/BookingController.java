@@ -53,7 +53,7 @@ public class BookingController {
             @Valid final BookingDTORequest bookingDTORequest) {
         LOGGER.info("Booking Request: {}.", bookingDTORequest);
         final BookingDTOResponse bookingResponseDTO = bookingService.save(bookingDTORequest);
-        if(Optional.ofNullable(bookingResponseDTO.getId()).isPresent()) {
+        if(Optional.ofNullable(bookingResponseDTO).isPresent()) {
             return new ResponseEntity(bookingResponseDTO, HttpStatus.CREATED);
         } else {
             return new ResponseEntity(bookingResponseDTO, HttpStatus.NOT_FOUND);
