@@ -70,7 +70,7 @@ public class BookingServiceImpl implements com.hotel.booking.service.BookingServ
             LOGGER.error("No Bookings to Return!");
             return new ArrayList<>();
         } else {
-            LOGGER.info("Bookings found {} ", listOfBooking);
+            LOGGER.info("{} Bookings found ! ",listOfBooking.size());
             return listOfBooking.stream().map(BookingServiceImpl::parseEntityToDTOResponse)
                     .collect(Collectors.toList());
         }
@@ -81,7 +81,7 @@ public class BookingServiceImpl implements com.hotel.booking.service.BookingServ
     public void deleteById(Long id) {
         final Optional<Booking> booking = bookingRepository.findById(id);
         if (!booking.isPresent()) {
-            LOGGER.error("Booking with idCard - {} WAS NOT FOUND!",id);
+            LOGGER.error("Booking with id - {} WAS NOT FOUND!",id);
         } else {
             bookingRepository.delete(booking.get());
         }
@@ -136,7 +136,7 @@ public class BookingServiceImpl implements com.hotel.booking.service.BookingServ
     }
 
         /**
-         * Validates if the days from the request are available , room not already booked..
+         * Validates if the days from the request are available
          *
          * @param bookingDTORequest The request to be validated.
          * @return <b>true</b> if the days are available, <b>false</b> otherwise.
