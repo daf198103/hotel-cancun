@@ -154,7 +154,6 @@ public class BookingServiceImpl implements com.hotel.booking.service.BookingServ
                     responseStartDate = LocalDate.parse(response.getStartDate(), dtf);
                     responseFinishDate = LocalDate.parse(response.getFinishDate(), dtf);
 
-                    // If "startDate" or "finishDate" from the request is equals to "startDate" or "finishDate" from an existing booking, not available.
                     if (requestStartDate.isEqual(responseStartDate) ||
                             requestStartDate.isEqual(responseFinishDate) ||
                             requestFinishDate.isEqual(responseStartDate) ||
@@ -162,7 +161,6 @@ public class BookingServiceImpl implements com.hotel.booking.service.BookingServ
                         return false;
                     }
 
-                    // If "startDate" or "finishDate" from the request is in between "startDate" or "finishDate" from an existing booking, not available.
                     if ((requestStartDate.isAfter(responseStartDate) &&
                             requestStartDate.isBefore(responseFinishDate)) ||
                             (requestFinishDate.isAfter(responseStartDate) &&
@@ -170,7 +168,6 @@ public class BookingServiceImpl implements com.hotel.booking.service.BookingServ
                         return false;
                     }
 
-                    // If "startDate" and "finishDate" from the response are in between the "startDate" and "finishDate" from the request, not available.
                     if (responseStartDate.isAfter(requestStartDate) &&
                             responseStartDate.isBefore(requestFinishDate) &&
                             responseFinishDate.isAfter(requestStartDate) &&
